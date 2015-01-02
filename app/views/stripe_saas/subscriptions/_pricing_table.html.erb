@@ -1,0 +1,37 @@
+<ul class="thumbnails pricing-table">
+  <% @plans.each do |plan| %>
+    <li class="span3 plan <%= 'plan-primary' if plan.highlight? %>">
+      <div class="thumbnail">
+        <div class="caption">
+          <h3><%= plan.name %></h3>
+          <h4><%= plan_price(plan) %></h4>
+          <div class="call-to-action">
+            <% if @subscription.nil? %>
+              <%= link_to 'Sign Up', stripe_saas.new_subscription_path(plan: plan.stripe_id), class: "btn btn-success btn-large" %>
+            <% elsif @subscription.persisted? %>
+              <% if @subscription.plan == plan %>
+                <%= form_for @subscription, url: owner_subscription_path(@owner, @subscription) do |f| %>
+                  <%= f.submit 'Selected', class: "btn btn-large", disabled: 'disabled' %>
+                <% end %>
+              <% else %>
+                <%= form_for @subscription, url: owner_subscription_path(@owner, @subscription) do |f| %>
+                  <%= f.hidden_field :plan_id, value: plan.id %>
+                  <%= f.submit @subscription.describe_difference(plan), class: "btn btn-success btn-large" %>
+                <% end %>
+              <% end %>
+            <% else %>
+              <%= link_to 'Upgrade', new_owner_subscription_path(@owner, plan: plan.stripe_id), class: "btn btn-success btn-large" %>
+            <% end %>
+          </div>
+          <ul class="features">
+            <ul>
+              <% plan.features.each do |feature| %>
+                <li><%= feature %></li>
+              <% end %>
+            </ul>
+          </ul>
+        </div>
+      </div>
+    </li>
+  <% end %>
+</ul>
