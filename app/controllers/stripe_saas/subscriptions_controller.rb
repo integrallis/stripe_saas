@@ -14,6 +14,7 @@ module StripeSaas
       false
     end
 
+    # subscription.subscription_owner
     def load_owner
       unless params[:owner_id].nil?
         if current_owner.present?
@@ -35,7 +36,16 @@ module StripeSaas
           if current_owner.try(:id) == searched_owner.try(:id)
             @owner = current_owner
           else
-            return unauthorized
+            customer = Subscription.find_customer(searched_owner)
+            # susbscription we are looking for belongs to the same user but to a different
+            # subscription owner
+            # e.g. user -> account -> subscription
+            # same user but different accounts for example
+            if @subscription.subscription_owner.try(:id) == customer.try(:id)
+              @owner = searched_owner
+            else
+              return unauthorized
+            end
           end
         else
           return unauthorized

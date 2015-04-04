@@ -119,12 +119,16 @@ module StripeSaas::Subscription
 
   # Pretty sure this wouldn't conflict with anything someone would put in their model
   def subscription_owner
-    owner = send StripeSaas.subscriptions_owned_by
+    Subscription.find_customer(self)
+  end
+
+  def self.find_customer(subscription_or_owner)
+    owner = subscription_or_owner.send StripeSaas.subscriptions_owned_by
     # Return whatever we belong to.
     # If this object doesn't respond to 'name', please update owner_description.
     if StripeSaas.customer_accessor
       if StripeSaas.customer_accessor.kind_of?(Array)
-        StripeSaas.customer_accessor.inject(self) {|o, a| o.send(a); o }
+        StripeSaas.customer_accessor.inject(subscription_or_owner) {|o, a| o.send(a); o }
       else
         owner.send StripeSaas.customer_accessor
       end
