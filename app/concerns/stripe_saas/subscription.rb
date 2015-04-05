@@ -18,7 +18,6 @@ module StripeSaas::Subscription
       if changing_plans?
         # and a customer exists in stripe ..
         if stripe_id.present?
-
           # fetch the customer.
           customer = Stripe::Customer.retrieve(stripe_id)
 
@@ -55,7 +54,6 @@ module StripeSaas::Subscription
             self.current_price = self.plan.price
 
             begin
-
               customer_attributes = if self.plan.free?
                 {
                   description: subscription_owner_description,
@@ -106,9 +104,7 @@ module StripeSaas::Subscription
         # update the last four based on this new card.
         self.last_four = customer.cards.retrieve(customer.default_card).last4
       end
-
     end
-
   end
 
   # Set a Stripe coupon code that will be used when a new Stripe customer (a.k.a. StripeSaas subscription)
@@ -119,11 +115,15 @@ module StripeSaas::Subscription
 
   # Pretty sure this wouldn't conflict with anything someone would put in their model
   def subscription_owner
-    Subscription.find_customer(self)
+    StripeSaas::Subscription.find_customer(self)
   end
 
   def self.find_customer(subscription_or_owner)
-    owner = subscription_or_owner.send StripeSaas.subscriptions_owned_by
+    if subscription_or_owner.class.to_s.downcase.to_sym == StripeSaas.subscriptions_owned_by
+      owner = subscription_or_owner
+    else
+      owner = subscription_or_owner.send StripeSaas.subscriptions_owned_by
+    end
     # Return whatever we belong to.
     # If this object doesn't respond to 'name', please update owner_description.
     if StripeSaas.customer_accessor
@@ -150,7 +150,6 @@ module StripeSaas::Subscription
 
   def subscription_owner_email
     "#{subscription_owner.try(:email)}"
-
   end
 
   def changing_plans?

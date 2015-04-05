@@ -16,7 +16,6 @@ module StripeSaas
 
     # subscription.subscription_owner
     def load_owner
-      puts ">>>> IN load_owner (current_owner = #{current_owner})..."
       unless params[:owner_id].nil?
         if current_owner.present?
 
@@ -25,7 +24,6 @@ module StripeSaas
           # by older versions of friendly_id. (support for newer versions default behavior
           # below.)
           searched_owner = current_owner.class.find(params[:owner_id]) rescue nil
-          puts ">>> searcher_owner = #{searched_owner}"
 
           # if we couldn't find them that way, check whether there is a new version of
           # friendly_id in place that we can use to look them up by their slug.
@@ -36,21 +34,16 @@ module StripeSaas
           end
 
           if current_owner.try(:id) == searched_owner.try(:id)
-            puts "In #1"
             @owner = current_owner
           else
-            puts "In #2"
             customer = Subscription.find_customer(searched_owner)
-            puts ">>> customer = #{customer}"
+            customer_2 = Subscription.find_customer(current_owner)
             # susbscription we are looking for belongs to the same user but to a different
             # subscription owner
             # e.g. user -> account -> subscription
             # same user but different accounts for example
-            puts "@subscription.subscription_owner.try(:id) >> #{@subscription.subscription_owner.try(:id)}"
-            puts "customer.try(:id) >> #{customer.try(:id)}"
 
-            if @subscription.subscription_owner.try(:id) == customer.try(:id)
-              puts ">>> In #3"
+            if customer_2.try(:id) == customer.try(:id)
               @owner = searched_owner
             else
               return unauthorized
@@ -67,8 +60,11 @@ module StripeSaas
     end
 
     def load_subscription
+      # config.subscriptions_owned_by = :account
+      # config.customer_accessor = :owner
       ownership_attribute = :"#{StripeSaas.subscriptions_owned_by}_id"
-      @subscription = ::Subscription.where(ownership_attribute => current_owner.id).find_by_id(params[:id])
+      @subscription = ::Subscription.where(ownership_attribute => current_owner.id).find_by_id(params[:id]) ||
+                      ::Subscription.where(ownership_attribute => @owner.id).find_by_id(params[:id])
       return @subscription.present? ? @subscription : unauthorized
     end
 
