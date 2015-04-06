@@ -1,0 +1,42 @@
+<%= form_for @subscription, url: url, html: {id: 'payment-form', class: 'form-horizontal'} do |f| %>
+
+<fieldset>
+
+  <legend><%= title %></legend>
+
+  <div class="control-group">
+    <label class="control-label">Card Number</label>
+    <div class="controls">
+      <input type="text" size="20" autocomplete="off" class="card-number"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Expiration (MM/YYYY)</label>
+    <div class="controls">
+      <input type="text" size="2" class="card-expiry-month input-mini"/>
+      <span> / </span>
+      <input type="text" size="4" class="card-expiry-year input-mini"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">CVC</label>
+    <div class="controls">
+      <input type="text" size="4" autocomplete="off" class="card-cvc input-small"/>
+    </div>
+  </div>
+
+  <div class="alert alert-error payment-errors"></div>
+  <%= f.hidden_field :plan_id, value: params[:plan] || @subscription.plan_id %>
+
+</fieldset>
+
+<div class="control-group">
+  <div class="controls">
+    <button type="submit" class="btn btn-primary submit-button">Upgrade Your Account</button>
+    <%= link_to "Cancel", owner_subscriptions_path(@owner), class: 'btn' %>
+  </div>
+</div>
+
+<% end %>

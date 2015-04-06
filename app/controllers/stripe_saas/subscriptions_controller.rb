@@ -165,7 +165,7 @@ module StripeSaas
       else
         if @subscription.update_attributes(subscription_params)
           flash[:notice] = "You've successfully updated your subscription."
-          redirect_to owner_subscription_path(@owner, @subscription)
+          redirect_to edit_owner_subscription_path(@owner, @subscription)
         else
           flash[:error] = 'There was a problem processing this transaction.'
           render :edit
