@@ -16,10 +16,8 @@ module StripeSaas
           ::Plan.all.each do |plan|
             begin
               stripe_plan = Stripe::Plan.retrieve(plan.stripe_id)
-              puts "(stripe_saas) Found local Plan: #{plan.stripe_id} (#{plan.name}) in Stripe"
             rescue Stripe::InvalidRequestError => ire
               if ire.message == "No such plan: #{plan.stripe_id}"
-                puts "(stripe_saas) Creating matching Plan in Stripe: #{plan.stripe_id} (#{plan.name})"
                 Stripe::Plan.create(
                   id: plan.stripe_id,
                   name: plan.name,
