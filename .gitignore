@@ -9,3 +9,4 @@ spec/dummy/.sass-cache
 .DS_Store
 .ruby-*
 Gemfile.lock
+*.gem
