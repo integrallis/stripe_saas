@@ -18,7 +18,6 @@ module StripeSaas
       @subscription_owner_model.downcase
     end
 
-
     def install
 
       unless defined?(StripeSaas)
@@ -35,8 +34,16 @@ module StripeSaas
       template "app/models/subscription.rb"
 
       # Add the plans.
-      generate("model", "plan stripe_id:string name:string price_cents:integer interval:string interval_count:integer trial_period_days:integer metadata_as_json:text statement_descriptor:text features_as_json:text highlight:boolean display_order:integer")
+      generate("model", "plan stripe_id:string name:string price_cents:integer interval:string interval_count:integer trial_period_days:integer metadata_as_json:text statement_descriptor:text highlight:boolean display_order:integer")
       template "app/models/plan.rb"
+
+      # Add features
+      generate("model", "feature name:string description:string feature_type:string unit:string display_order:integer")
+      template "app/models/feature.rb"
+
+      # Add Plan Features
+      generate("model", "plan_feature value:string display_value:string plan_id:integer feature_id:integer")
+      template "app/models/plan_feature.rb"
 
       # Update the owner relationship.
       inject_into_class "app/models/#{subscription_owner_model}.rb", Plan, "has_one :subscription\n"

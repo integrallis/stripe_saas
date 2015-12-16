@@ -25,8 +25,14 @@
           </div>
           <ul class="features">
             <ul>
-              <% plan.features.each do |feature| %>
-                <li><%= feature %></li>
+              <% plan.plan_features.each do |plan_feature| %>
+                <li>
+                <% if plan_feature.feature.feature_type == 'boolean' %>
+                  <%= plan_feature.value > 0 ? number_with_delimiter(plan_feature.value) : "No" %> <%= plan_feature.feature.description %>
+                <% else %>
+                  <%= pf.value ? '&#10004;' : '&#10006;' %> <%= pf.feature.description %>
+                <% end %>
+                </li>
               <% end %>
             </ul>
           </ul>

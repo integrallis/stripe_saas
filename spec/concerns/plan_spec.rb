@@ -40,4 +40,11 @@ describe StripeSaas::Plan do
     end
 
   end
+
+  describe 'plan features' do
+    # before {
+    #   feature_a = Feature.new
+    #   feature_b = Feature.new
+    # }
+  end
 end

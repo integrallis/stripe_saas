@@ -9,16 +9,29 @@ module StripeSaas::Plan
     (price || 0) >= (plan.price || 0)
   end
 
+  def is_downgrade_from?(plan)
+    !is_upgrade_from?(plan)
+  end
+
   def free?
     price == 0.0
   end
 
-  def features
-    features_as_json.present? ? JSON::parse(features_as_json) : []
+  def add_feature(feature, value, display_value=nil)
+    feature = Feature.find_by(name: feature.to_s) if feature.is_a?(String) || feature.is_a?(Symbol)
+
+    plan_features.find_or_create_by(feature: feature).update({
+      value: value,
+      display_value: display_value
+    })
   end
 
-  def features=(features_as_array)
-    features_as_json = features_as_array.to_json
+  def has_feature?(feature)
+    if feature.is_a?(String)
+      !features.find_by(name: feature).first.nil?
+    else
+      features.any? { |f| f.id == feature.id }
+    end
   end
 
   def metadata
