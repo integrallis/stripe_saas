@@ -30,7 +30,7 @@ describe PlanFeature, type: :model do
       display_order: 3
     })
 
-    @plan = Plan.find_or_create_by(stripe_id: 'my_plan')
+    @plan = Plan.find_or_create_by(stripe_id: 'the_plan')
     @plan.update({
       name: 'My Plan',
       price: 0.0,
