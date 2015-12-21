@@ -10,3 +10,4 @@ spec/dummy/.sass-cache
 .ruby-*
 Gemfile.lock
 *.gem
+coverage

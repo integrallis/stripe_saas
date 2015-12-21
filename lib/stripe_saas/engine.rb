@@ -4,6 +4,10 @@ module StripeSaas
   class Engine < ::Rails::Engine
     isolate_namespace StripeSaas
 
+    config.generators do |g|
+      g.test_framework :rspec
+    end
+
     initializer 'stripe_saas.action_controller' do |app|
       ActiveSupport.on_load :action_controller do
         helper StripeSaas::ApplicationHelper

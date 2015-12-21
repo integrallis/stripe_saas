@@ -9,7 +9,6 @@ class CreatePlans < ActiveRecord::Migration
       t.integer :trial_period_days
       t.text :metadata_as_json
       t.text :statement_descriptor
-      t.text :features_as_json
       t.boolean :highlight
       t.integer :display_order
 

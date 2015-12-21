@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["bsbodden@integrallis.com"]
   s.homepage    = "https://github.com/integrallis/stripe_saas"
   s.summary     = "Stripe Payments/Subscription Engine for Rails 4."
-  s.description = "Stripe Payments/Subscription Engine for Rails 4."
+  s.description = "A Rails Engine that provides everything you need to Stripe enable your app."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.asc"]

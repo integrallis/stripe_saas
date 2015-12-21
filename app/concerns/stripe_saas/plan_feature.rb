@@ -14,12 +14,12 @@ module StripeSaas::PlanFeature
     end
   end
 
-  def to_s
-    case feature.feature_type
+  def to_s()
+    case feature.feature_type.to_sym
       when :boolean
-        feature.name
+        "#{self.value ? '' : 'No '}#{self.feature.name}"
       when :number, :percentage, :filesize, :interval
-        "#{self[:value]} #{feature.description}"
+        %[#{self[:value]} #{self.feature.use_unit ? "#{self.feature.unit.pluralize(self.value).capitalize} " : ''}#{self.feature.description}]
     end
   end
 end

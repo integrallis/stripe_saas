@@ -113,7 +113,6 @@ module StripeSaas::Subscription
     @coupon_code = new_code
   end
 
-  # Pretty sure this wouldn't conflict with anything someone would put in their model
   def subscription_owner
     StripeSaas::Subscription.find_customer(self)
   end
@@ -145,7 +144,7 @@ module StripeSaas::Subscription
   def subscription_owner_description
     # assuming owner responds to name.
     # we should check for whether it responds to this or not.
-    "#{subscription_owner.try(:name) || subscription_owner.try(:id)}"
+    "#{subscription_owner.try(:name) || subscription_owner.try(:id) || subscription_owner.try(:email)}"
   end
 
   def subscription_owner_email

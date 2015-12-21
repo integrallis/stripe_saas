@@ -11,7 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150102001930) do
+ActiveRecord::Schema.define(version: 20151220161817) do
+
+  create_table "features", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "feature_type"
+    t.string   "unit"
+    t.integer  "display_order"
+    t.boolean  "use_unit"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "plan_features", force: :cascade do |t|
+    t.string   "value"
+    t.string   "display_value"
+    t.integer  "plan_id"
+    t.integer  "feature_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
 
   create_table "plans", force: :cascade do |t|
     t.string   "stripe_id"
@@ -22,7 +42,6 @@ ActiveRecord::Schema.define(version: 20150102001930) do
     t.integer  "trial_period_days"
     t.text     "metadata_as_json"
     t.text     "statement_descriptor"
-    t.text     "features_as_json"
     t.boolean  "highlight"
     t.integer  "display_order"
     t.datetime "created_at",           null: false

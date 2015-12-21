@@ -38,7 +38,7 @@ module StripeSaas
       template "app/models/plan.rb"
 
       # Add features
-      generate("model", "feature name:string description:string feature_type:string unit:string display_order:integer")
+      generate("model", "feature name:string description:string feature_type:string unit:string display_order:integer use_unit:boolean")
       template "app/models/feature.rb"
 
       # Add Plan Features
