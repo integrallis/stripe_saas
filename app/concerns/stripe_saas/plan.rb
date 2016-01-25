@@ -6,7 +6,7 @@ module StripeSaas::Plan
   end
 
   def is_upgrade_from?(plan)
-    (price || 0) >= (plan.price || 0)
+    (price_cents || 0) >= (plan.price_cents || 0)
   end
 
   def is_downgrade_from?(plan)
@@ -14,7 +14,7 @@ module StripeSaas::Plan
   end
 
   def free?
-    price == 0.0
+    price_cents.zero?
   end
 
   def add_feature(feature, value, display_value=nil)
