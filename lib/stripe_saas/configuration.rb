@@ -17,6 +17,9 @@ module StripeSaas
   mattr_accessor :create_plans_in_stripe
   @@create_plans_in_stripe = false
 
+  mattr_accessor :non_stripe_plans
+  @@non_stripe_plans = []
+
   def self.setup
     yield self
 

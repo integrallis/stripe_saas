@@ -18,21 +18,23 @@ module StripeSaas
       if StripeSaas.create_plans_in_stripe?
         begin
           ::Plan.all.each do |plan|
-            begin
-              stripe_plan = Stripe::Plan.retrieve(plan.stripe_id)
-            rescue Stripe::InvalidRequestError => ire
-              if ire.message == "No such plan: #{plan.stripe_id}"
-                Stripe::Plan.create(
-                  id: plan.stripe_id,
-                  name: plan.name,
-                  amount: plan.price_cents,
-                  interval: plan.interval,
-                  interval_count: plan.interval_count,
-                  trial_period_days: plan.trial_period_days,
-                  statement_descriptor: plan.statement_descriptor,
-                  currency: 'usd',
-                  metadata: plan.metadata_as_json
-                )
+            unless StripeSaas.non_stripe_plans.include?(plan.stripe_id)
+              begin
+                stripe_plan = Stripe::Plan.retrieve(plan.stripe_id)
+              rescue Stripe::InvalidRequestError => ire
+                if ire.message == "No such plan: #{plan.stripe_id}"
+                  Stripe::Plan.create(
+                    id: plan.stripe_id,
+                    name: plan.name,
+                    amount: plan.price_cents,
+                    interval: plan.interval,
+                    interval_count: plan.interval_count,
+                    trial_period_days: plan.trial_period_days,
+                    statement_descriptor: plan.statement_descriptor,
+                    currency: 'usd',
+                    metadata: plan.metadata_as_json
+                  )
+                end
               end
             end
           end
