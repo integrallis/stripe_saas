@@ -5,9 +5,7 @@ class Plan < ActiveRecord::Base
 
   default_scope { order(:display_order) }
 
-  self.all.each do |plan|
-    scope plan.to_sym, -> { find_by(stripe_id: plan.stripe_id) }
-  end
+  scope :by_stripe_id, lambda { |stripe_id| find_by(stripe_id: stripe_id.to_s) }
 
   include StripeSaas::Plan
 end
