@@ -14,7 +14,7 @@ module StripeSaas::PlanFeature
     end
   end
 
-  def to_s()
+  def to_s
     case feature.feature_type.to_sym
       when :boolean
         "#{self.value ? '' : 'No '}#{self.feature.name}"

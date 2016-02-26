@@ -15,7 +15,7 @@ module StripeSaas
     end
 
     initializer 'stripe_saas.create_plans' do |app|
-      if StripeSaas.create_plans_in_stripe?
+      if StripeSaas.create_plans_in_stripe? && !Rails.env.test?
         begin
           ::Plan.all.each do |plan|
             unless StripeSaas.non_stripe_plans.include?(plan.stripe_id)
