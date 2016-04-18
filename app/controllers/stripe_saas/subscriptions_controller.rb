@@ -78,9 +78,22 @@ module StripeSaas
     def redirect_to_sign_up
       # this is a Devise default variable and thus should not change its name
       # when we change subscription owners from :user to :company
-      session["user_return_to"] = new_subscription_path(plan: params[:plan])
-      devise_scope = (StripeSaas.devise_scope || StripeSaas.subscriptions_owned_by).to_s
-      redirect_to new_registration_path(devise_scope)
+      begin
+        plan = ::Plan.find(params[:plan])
+      rescue ActiveRecord::RecordNotFound
+        plan = ::Plan.by_stripe_id(params[:plan])
+      end
+
+      if plan
+        unless plan.free?
+          session["user_return_to"] = new_subscription_path(plan: plan)
+        end
+
+        devise_scope = (StripeSaas.devise_scope || StripeSaas.subscriptions_owned_by).to_s
+        redirect_to new_registration_path(devise_scope, plan: plan)
+      else
+        redirect_to new_registration_path
+      end
     end
 
     def index
