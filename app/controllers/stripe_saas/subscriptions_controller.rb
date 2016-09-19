@@ -81,7 +81,7 @@ module StripeSaas
       begin
         plan = ::Plan.find(params[:plan])
       rescue ActiveRecord::RecordNotFound
-        plan = ::Plan.by_stripe_id(params[:plan])
+        plan = ::Plan.by_stripe_id(params[:plan]).try(:first)
       end
 
       if plan
@@ -132,7 +132,7 @@ module StripeSaas
 
       else
         @subscription = ::Subscription.new
-        @subscription.plan = ::Plan.find_by_stripe_id(params[:plan])
+        @subscription.plan = ::Plan.find_by_stripe_id(params[:plan]).try(:first)
       end
     end
 
