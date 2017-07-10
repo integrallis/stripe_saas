@@ -30,7 +30,7 @@
                 <% if plan_feature.feature.feature_type != 'boolean' %>
                   <%= plan_feature.value > 0 ? number_with_delimiter(plan_feature.value) : "No" %> <%= plan_feature.feature.description %>
                 <% else %>
-                  <%= plan_feature.value ? '&#10004;' : '&#10006;' %> <%= plan_feature.feature.description %>
+                  <%= plan_feature.value ? '&#10004;'.html_safe : '&#10006;'.html_safe %> <%= plan_feature.feature.description %>
                 <% end %>
                 </li>
               <% end %>
