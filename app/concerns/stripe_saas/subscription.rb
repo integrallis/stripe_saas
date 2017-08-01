@@ -11,7 +11,7 @@ module StripeSaas::Subscription
     belongs_to :plan
 
     # update details.
-    before_save :processing!, unless: "Rails.env.test?"
+    before_save :processing!, unless: Proc.new { Rails.env.test? }
 
     def processing!
       # if their package level has changed ..
