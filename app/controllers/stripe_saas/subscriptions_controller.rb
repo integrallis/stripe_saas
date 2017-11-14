@@ -84,15 +84,15 @@ module StripeSaas
         plan = ::Plan.by_stripe_id(params[:plan]).try(:first)
       end
 
+      devise_scope = (StripeSaas.devise_scope || StripeSaas.subscriptions_owned_by).to_s
+
       if plan
         unless plan.free?
           session["user_return_to"] = new_subscription_path(plan: plan)
         end
-
-        devise_scope = (StripeSaas.devise_scope || StripeSaas.subscriptions_owned_by).to_s
         redirect_to new_registration_path(devise_scope, plan: plan)
       else
-        redirect_to new_registration_path
+        redirect_to new_registration_path(devise_scope)
       end
     end
 
